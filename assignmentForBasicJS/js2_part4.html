@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Matching Game_Smiling faces</title>
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<link href="" rel="stylesheet">
+	<style>
+	img {position: absolute;}
+	div {position: absolute; width: 500px; height: 500px}
+	#rightSide {left: 500px; border-left: 1px solid black}
+	</style>
+</head>
+<body onload="generateFaces()">
+	<h1>Matching Game</h1>
+	<p>Click on the extra smiling face on the left. This is your <snap id="hint"></snap> round.</p>
+	<div id="leftSide"></div>
+	<div id="rightSide"></div>
+	<script type="text/javascript">
+	var numberOfFaces = 5;
+	var theLeftSide = document.getElementById("leftSide");
+	var theRightSide = document.getElementById("rightSide");
+	var theBody = document.getElementsByTagName("body")[0];
+	var hint = document.getElementById("hint");
+	var round = 1;
+
+	function generateFaces()
+	{
+		while(numberOfFaces != 0)
+		{
+			var pic = document.createElement("img");
+			pic.src = "https://home.cse.ust.hk/~rossiter/mooc/matching_game/smile.png";	
+			pic.style.top = Math.floor(Math.random() * 400) + "px";
+			pic.style.left = Math.floor(Math.random() * 400) + "px";
+			theLeftSide.appendChild(pic);
+			numberOfFaces--;
+		}
+		var leftSideImages = theLeftSide.cloneNode(true);
+
+		leftSideImages.removeChild(leftSideImages.lastChild);
+		theRightSide.appendChild(leftSideImages);
+		hint.innerHTML = round;
+	
+		theLeftSide.lastChild.onclick = function nextLevel(ev) 
+		{
+			ev.stopPropagation();
+			round ++;
+			numberOfFaces += round * 5;
+			while(theLeftSide.hasChildNodes())
+			{
+				theLeftSide.removeChild(theLeftSide.firstChild);
+			}	
+			while(theRightSide.hasChildNodes())
+			{
+				theRightSide.removeChild(theRightSide.firstChild);
+			}
+			generateFaces();
+		}
+
+		theBody.onclick = function gameOver()
+		{
+			alert("Game Over!");
+			theBody.onclick = null;
+			theLeftSide.lastChild.onclick = null;
+			round = 1;
+			numberOfFaces = 5;
+			while(theLeftSide.hasChildNodes())
+			{
+				theLeftSide.removeChild(theLeftSide.firstChild);
+			}	
+			while(theRightSide.hasChildNodes())
+			{
+				theRightSide.removeChild(theRightSide.firstChild);
+			}
+			generateFaces();
+		}
+	}
+
+	window.onload = generateFaces();
+	</script>
+</body>
+</html>
